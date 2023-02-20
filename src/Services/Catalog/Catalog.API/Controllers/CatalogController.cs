@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using Catalog.API.Infrastructure;
 using Catalog.API.Model;
 using Catalog.API.ViewModel;
+using Catalog.Contracts;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -15,10 +17,13 @@ public class CatalogController : ControllerBase
 {
     private readonly CatalogContext _catalogContext;
     private readonly CatalogSettings _catalogSettings;
+    private readonly IPublishEndpoint _publishEndpoint;
 
-    public CatalogController(CatalogContext catalogContext, IOptionsSnapshot<CatalogSettings> catalogSettings)
+    public CatalogController(CatalogContext catalogContext, IOptionsSnapshot<CatalogSettings> catalogSettings,
+        IPublishEndpoint publishEndpoint)
     {
         _catalogContext = catalogContext;
+        _publishEndpoint = publishEndpoint;
         _catalogSettings = catalogSettings.Value;
     }
 
@@ -276,11 +281,20 @@ public class CatalogController : ControllerBase
         catalogItem.Description = item.Description ?? catalogItem.Description;
         catalogItem.Name = item.Name ?? catalogItem.Name;
         catalogItem.PictureFileName = item.PictureFileName ?? catalogItem.PictureFileName;
-        catalogItem.Price = item.Price ?? catalogItem.Price;
         catalogItem.AvailableStock = item.AvailableStock ?? catalogItem.AvailableStock;
         catalogItem.OnReorder = item.OnReorder ?? catalogItem.OnReorder;
+        var oldPrice = catalogItem.Price;
+        catalogItem.Price = item.Price ?? catalogItem.Price;
 
         await _catalogContext.SaveChangesAsync();
+        if (oldPrice != catalogItem.Price)
+            await _publishEndpoint.Publish<ICatalogItemPriceChanged>(new
+            {
+                ProductId = catalogItem.Id,
+                NewPrice = catalogItem.Price,
+                OldPrice = oldPrice,
+            });
+
         return Ok();
     }
 

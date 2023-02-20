@@ -2,9 +2,12 @@ using Catalog.API.Controllers;
 using Catalog.API.Infrastructure;
 using Catalog.API.Model;
 using Catalog.API.ViewModel;
+using Catalog.Contracts;
 using FluentAssertions;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Catalog.UnitTests;
 
@@ -12,6 +15,7 @@ public class CatalogControllerTests
 {
     private CatalogContext _context = null!;
     private CatalogController _controller = null!;
+    private Mock<IPublishEndpoint> _publishEndpointMock = null!;
 
     [SetUp]
     public void Setup()
@@ -24,7 +28,11 @@ public class CatalogControllerTests
         _context.CatalogTypes.AddRange(GetTestingCatalogTypes());
         _context.CatalogItems.AddRange(GetTestingCatalogItems());
         _context.SaveChanges();
-        _controller = new CatalogController(_context, new TestingCatalogSettings());
+        _publishEndpointMock = new Mock<IPublishEndpoint>();
+        _publishEndpointMock.Setup(p => p.Publish(It.IsAny<ICatalogItemPriceChanged>(), CancellationToken.None))
+                            .Returns(Task.CompletedTask);
+
+        _controller = new CatalogController(_context, new TestingCatalogSettings(), _publishEndpointMock.Object);
     }
 
     [Test]
@@ -286,6 +294,27 @@ public class CatalogControllerTests
             Id = 0,
         });
         actionResult2.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Test]
+    public async Task UpdateCatalogItemPricePublishEventTest()
+    {
+        var item = GetTestingCatalogItems().First();
+        var actionResult = await _controller.UpdateCatalogItemAsync(new UpdateCatalogItemViewModel
+        {
+            Id = 1,
+            Price = item.Price * 2,
+        });
+        actionResult.Should().BeOfType<OkResult>();
+        var publishArgs = _publishEndpointMock.Invocations.First().Arguments;
+        var @event = publishArgs.First();
+        @event.Should()
+              .BeEquivalentTo(new
+              {
+                  ProductId = 1,
+                  NewPrice = item.Price * 2,
+                  OldPrice = item.Price,
+              });
     }
 
     private IEnumerable<CatalogItem> GetTestingCatalogItems() =>

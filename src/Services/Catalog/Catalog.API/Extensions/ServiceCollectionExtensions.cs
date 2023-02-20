@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Catalog.API.Infrastructure;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -13,7 +14,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddCustomMvc(this IServiceCollection services)
+    public static IServiceCollection AddConfiguredMvc(this IServiceCollection services)
     {
         services.AddControllers();
         services.AddCors(options =>
@@ -30,7 +31,8 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddCustomDbContext(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddConfiguredDbContext(this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddDbContext<CatalogContext>(o =>
         {
@@ -42,7 +44,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
+    public static IServiceCollection AddConfiguredSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(o =>
         {
@@ -50,6 +52,26 @@ public static class ServiceCollectionExtensions
             {
                 Title = "EShop - Catalog.API",
                 Version = "v1",
+            });
+        });
+
+        return services;
+    }
+
+    public static IServiceCollection AddConfiguredMasstransit(this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        var rabbitMqSection = configuration.GetSection("RabbitMq");
+        services.AddMassTransit(cfg =>
+        {
+            cfg.UsingRabbitMq((ctx, c) =>
+            {
+                c.Host(rabbitMqSection["Host"], h =>
+                {
+                    h.Username(rabbitMqSection["Username"]);
+                    h.Password(rabbitMqSection["Password"]);
+                });
+                c.ConfigureEndpoints(ctx);
             });
         });
 

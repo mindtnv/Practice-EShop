@@ -8,6 +8,8 @@
 
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.Rabbitmq" Version="6.0.2"/>
+        <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1"/>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.13"/>
         <PackageReference Include="Microsoft.AspNetCore.HealthChecks" Version="1.0.0"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.3">
             <PrivateAssets>all</PrivateAssets>
@@ -17,6 +19,10 @@
         <PackageReference Include="Serilog.AspNetCore" Version="6.1.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Catalog.Contracts\Catalog.Contracts.csproj"/>
     </ItemGroup>
 
 </Project>
