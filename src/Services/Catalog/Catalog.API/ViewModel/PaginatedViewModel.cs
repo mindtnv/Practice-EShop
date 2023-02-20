@@ -6,7 +6,7 @@ public class PaginatedViewModel<T> where T : class
     public int PageSize { get; set; }
     public long Count { get; set; }
     public IEnumerable<T> Items { get; set; }
-    
+
     public PaginatedViewModel(int pageIndex, int pageSize, long count, IEnumerable<T> items)
     {
         PageIndex = pageIndex;

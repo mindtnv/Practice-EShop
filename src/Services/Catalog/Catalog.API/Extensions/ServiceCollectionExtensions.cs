@@ -7,6 +7,12 @@ namespace Catalog.API.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+    public static IServiceCollection CustomConfigure(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<CatalogSettings>(configuration.GetSection(nameof(CatalogSettings)));
+        return services;
+    }
+
     public static IServiceCollection AddCustomMvc(this IServiceCollection services)
     {
         services.AddControllers();
@@ -36,7 +42,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddSwagger(this IServiceCollection services)
+    public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
     {
         services.AddSwaggerGen(o =>
         {

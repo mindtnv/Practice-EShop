@@ -2,9 +2,10 @@ using Catalog.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services
+       .CustomConfigure(builder.Configuration)
        .AddCustomMvc()
        .AddCustomDbContext(builder.Configuration)
-       .AddSwaggerGen();
+       .AddCustomSwagger();
 
 var app = builder.Build();
 app.UseSwagger().UseSwaggerUI();
