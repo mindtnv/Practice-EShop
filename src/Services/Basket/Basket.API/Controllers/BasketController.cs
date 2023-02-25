@@ -31,7 +31,7 @@ public class BasketController : ControllerBase
     [HttpPost]
     [ProducesResponseType((int) HttpStatusCode.OK)]
     [ProducesResponseType((int) HttpStatusCode.BadRequest)]
-    public async Task<ActionResult> UpdateCustomerBasketAsync([FromRoute] CustomerBasket basket)
+    public async Task<ActionResult> UpdateCustomerBasketAsync([FromBody] CustomerBasket basket)
     {
         var isSuccess = await _basketRepository.UpdateBasketAsync(basket);
         return isSuccess ? Ok() : BadRequest();

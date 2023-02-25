@@ -1,4 +1,5 @@
 ﻿using Basket.API.Infrastructure.Repositories;
+using Basket.API.IntegrationEvents.Consumers;
 using MassTransit;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
@@ -57,6 +58,8 @@ public static class ServiceCollectionExtensions
                 });
                 c.ConfigureEndpoints(ctx);
             });
+
+            cfg.AddConsumer<CatalogItemPriceChangedConsumer>();
         });
 
         return services;
