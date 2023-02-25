@@ -12,4 +12,7 @@ var app = builder.Build();
 app.UseRouting();
 app.UseSwagger().UseSwaggerUI();
 app.MapControllers();
+
+app.MapGet("/", () => Results.LocalRedirect("/swagger", true));
+
 app.Run();
