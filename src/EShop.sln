@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Contracts", "Servic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.API", "Services\Basket\Basket.API\Basket.API.csproj", "{46413365-19B4-441E-855E-E93A2CE5C403}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basket.UnitTests", "Services\Basket\Basket.UnitTests\Basket.UnitTests.csproj", "{0FBC25F7-930E-45FB-B447-B894ECC67493}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{46413365-19B4-441E-855E-E93A2CE5C403}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46413365-19B4-441E-855E-E93A2CE5C403}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46413365-19B4-441E-855E-E93A2CE5C403}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0FBC25F7-930E-45FB-B447-B894ECC67493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0FBC25F7-930E-45FB-B447-B894ECC67493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0FBC25F7-930E-45FB-B447-B894ECC67493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0FBC25F7-930E-45FB-B447-B894ECC67493}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
