@@ -19,6 +19,12 @@ services:
   basket-data:
     ports:
       - "6379:6379"
+  
+  seq:
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - "5099:80"
 
   basket-api:
     environment:
@@ -26,6 +32,7 @@ services:
       - ASPNETCORE_URLS=http://0.0.0.0:80
       - RABBITMQ__HOST=host.docker.internal
       - BASKETSETTINGS__REDISCONNECTIONSTRING=host.docker.internal
+      - SEQ__HOST=http://host.docker.internal:5099
     ports:
       - "5002:80"
 
@@ -37,6 +44,7 @@ services:
       - RABBITMQ__HOST=host.docker.internal
       - CONNECTIONSTRINGS__DEFAULT=User ID=postgres;Password=postgres;Host=host.docker.internal;Port=5432;Database=EShop.Catalog;
       - SEEDDBCONTEXT=true
+      - SEQ__HOST=http://host.docker.internal:5099
     ports:
       - "5001:80"
 

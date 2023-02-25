@@ -9,6 +9,9 @@ services:
     
   basket-data:
     image: redis:7.0.8-alpine
+    
+  seq:
+    image: datalust/seq:latest
   
   basket-api:
     build:
