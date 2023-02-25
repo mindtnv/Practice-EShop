@@ -1,0 +1,27 @@
+﻿version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15.2-alpine
+    
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    
+  basket-data:
+    image: redis:7.0.8-alpine
+  
+  basket-api:
+    build:
+      context: .
+      dockerfile: Services/Basket/Basket.API/Dockerfile
+    depends_on:
+      - basket-data
+      - rabbitmq
+
+  catalog-api:
+    build:
+      context: .
+      dockerfile: Services/Catalog/Catalog.API/Dockerfile
+    depends_on:
+      - postgres
+      - rabbitmq

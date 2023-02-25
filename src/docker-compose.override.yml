@@ -1,0 +1,44 @@
+﻿version: "3.8"
+
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  rabbitmq:
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  basket-data:
+    ports:
+      - "6379:6379"
+
+  basket-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - RABBITMQ__HOST=host.docker.internal
+      - BASKETSETTINGS__REDISCONNECTIONSTRING=host.docker.internal
+    ports:
+      - "5002:80"
+
+
+  catalog-api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+      - RABBITMQ__HOST=host.docker.internal
+      - CONNECTIONSTRINGS__DEFAULT=User ID=postgres;Password=postgres;Host=host.docker.internal;Port=5432;Database=EShop.Catalog;
+      - SEEDDBCONTEXT=true
+    ports:
+      - "5001:80"
+
+volumes:
+  postgres:

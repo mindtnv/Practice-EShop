@@ -1,6 +1,7 @@
 using Catalog.API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddEnvironmentVariables();
 builder.Services
        .CustomConfigure(builder.Configuration)
        .AddConfiguredMvc()

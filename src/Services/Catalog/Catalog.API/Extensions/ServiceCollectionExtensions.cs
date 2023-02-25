@@ -40,7 +40,9 @@ public static class ServiceCollectionExtensions
                 x => x.MigrationsAssembly(typeof(Program).GetTypeInfo().Assembly.GetName().Name));
         });
 
+        services.AddTransient<CatalogContextSeed>();
         services.AddHostedService<MigrationsHostedService<CatalogContext>>();
+        services.AddHostedService<SeedContextHostedService>();
         return services;
     }
 
