@@ -17,13 +17,15 @@ public class CatalogController : ControllerBase
 {
     private readonly CatalogContext _catalogContext;
     private readonly CatalogSettings _catalogSettings;
+    private readonly ILogger<CatalogController> _logger;
     private readonly IPublishEndpoint _publishEndpoint;
 
     public CatalogController(CatalogContext catalogContext, IOptionsSnapshot<CatalogSettings> catalogSettings,
-        IPublishEndpoint publishEndpoint)
+        IPublishEndpoint publishEndpoint, ILogger<CatalogController> logger)
     {
         _catalogContext = catalogContext;
         _publishEndpoint = publishEndpoint;
+        _logger = logger;
         _catalogSettings = catalogSettings.Value;
     }
 
@@ -288,12 +290,16 @@ public class CatalogController : ControllerBase
 
         await _catalogContext.SaveChangesAsync();
         if (oldPrice != catalogItem.Price)
-            await _publishEndpoint.Publish<ICatalogItemPriceChanged>(new
+        {
+            var @event = new
             {
                 ProductId = catalogItem.Id,
                 NewPrice = catalogItem.Price,
                 OldPrice = oldPrice,
-            });
+            };
+            _logger.LogInformation("Publishing {EventType} event: {@Event}", typeof(ICatalogItemPriceChanged), @event);
+            await _publishEndpoint.Publish<ICatalogItemPriceChanged>(@event);
+        }
 
         return Ok();
     }

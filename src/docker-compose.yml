@@ -3,13 +3,13 @@
 services:
   postgres:
     image: postgres:15.2-alpine
-    
+  
   rabbitmq:
     image: rabbitmq:3-management-alpine
-    
+  
   basket-data:
     image: redis:7.0.8-alpine
-    
+  
   seq:
     image: datalust/seq:latest
   
@@ -28,3 +28,6 @@ services:
     depends_on:
       - postgres
       - rabbitmq
+  
+  keycloak:
+    image: jboss/keycloak

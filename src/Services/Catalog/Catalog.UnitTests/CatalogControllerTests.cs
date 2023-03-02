@@ -7,6 +7,7 @@ using FluentAssertions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Moq;
 
 namespace Catalog.UnitTests;
@@ -32,7 +33,8 @@ public class CatalogControllerTests
         _publishEndpointMock.Setup(p => p.Publish(It.IsAny<ICatalogItemPriceChanged>(), CancellationToken.None))
                             .Returns(Task.CompletedTask);
 
-        _controller = new CatalogController(_context, new TestingCatalogSettings(), _publishEndpointMock.Object);
+        _controller = new CatalogController(_context, new TestingCatalogSettings(), _publishEndpointMock.Object,
+            new Mock<ILogger<CatalogController>>().Object);
     }
 
     [Test]

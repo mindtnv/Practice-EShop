@@ -1,14 +1,16 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>4c808382-7a63-437c-87a6-b964133c8574</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="MassTransit.AspNetCore" Version="7.3.1"/>
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.0.13"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.3"/>
         <PackageReference Include="StackExchange.Redis" Version="2.6.96"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
         <PackageReference Include="Serilog.AspNetCore" Version="6.1.0-dev-00289"/>

@@ -8,18 +8,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvironmentVariables();
 builder.Host.UseSerilog(ConfigureSerilogLogger(builder.Configuration));
 builder.Services
+       .AddConfiguredAuthorization(builder.Configuration, builder.Environment)
        .AddConfiguredSwagger()
        .AddConfiguredControllers()
        .AddConfiguredRedisBasketRepository(builder.Configuration)
        .AddConfiguredMassTransit(builder.Configuration);
 
 var app = builder.Build();
+
 app.UseRouting();
 app.UseSwagger().UseSwaggerUI();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.MapGet("/", () => Results.LocalRedirect("/swagger", true));
-
 app.Run();
 
 ILogger ConfigureSerilogLogger(IConfiguration configuration)

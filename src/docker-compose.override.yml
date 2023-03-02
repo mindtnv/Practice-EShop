@@ -36,7 +36,6 @@ services:
     ports:
       - "5002:80"
 
-
   catalog-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -47,6 +46,19 @@ services:
       - SEQ__HOST=http://host.docker.internal:5099
     ports:
       - "5001:80"
+  
+  keycloak:
+    ports:
+      - "8080:8080"
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - DB_VENDOR=POSTGRES
+      - DB_ADDR=host.docker.internal
+      - DB_PORT=5432
+      - DB_DATABASE=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
 
 volumes:
   postgres:
